@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <link rel="stylesheet" href="style.css" />
+        <title>Gym</title>
+    </head>
+
+    <body class="transition-colors text-gray-800">
+        <!-- header -->
+        <header class="py-4 bg-white border-b-1 border-gray-100">
+            <div class="container mx-auto flex items-center gap-4 justify-between">
+                <h1 class="text-3xl font-bold uppercase">
+                    Pumb<span class="text-green-600 hover:text-green-100">Gym</span>
+                </h1>
+
+                <a
+                    href="#"
+                    class="py-2 px-4 bg-green-600 flex items-center gap-2 text-white rounded-lg font-semibold transition-colors outline-2 outline-offset-2 outline-transparent hover:bg-green-700 focus:outline-green-600"
+                    data-dialog-toggle="create"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="currentColor"
+                        class="bi bi-plus-lg"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+                        />
+                    </svg>
+
+                    Add Customer
+                </a>
+            </div>
+        </header>
+
+        <div class="" data-page-content>
+            <!-- main -->
+            <main>
+                <div class="container mx-auto px-4">
+                    <table data-table="customers" class="w-full text-center">
+                        <thead></thead>
+
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </main>
+
+            <!-- aside -->
+            <aside class="border-s-1 border-gray-100">
+                <div class="container mx-auto">
+                    <!-- filter -->
+                    <form class="">
+                        <!-- name -->
+                        <div class="p-4">
+                            <label for="search_value" class="block mb-1" hidden>Search Here</label>
+                            <input
+                                id="search_value"
+                                type="search"
+                                class="border-1 border-gray-100 bg-gray-100 w-full py-2 px-3 rounded-lg transition-colors focus:border-green-600 focus:bg-white focus:outline-none"
+                                placeholder="Search by Name"
+                                value=""
+                            />
+                            <button
+                                class="py-2 px-4 bg-green-600 flex items-center justify-center gap-2 text-white rounded-lg font-semibold transition-colors outline-2 outline-offset-2 outline-transparent hover:bg-green-700 focus:outline-green-600 w-full mt-3"
+                            >
+                                Search
+
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    fill="currentColor"
+                                    class="bi bi-search"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="p-4 border-t-1 border-gray-100">
+                            <h2 class="text-xl font-semibold flex items-center gap-2">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    fill="currentColor"
+                                    class="bi bi-funnel"
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path
+                                        d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"
+                                    />
+                                </svg>
+                                Filter
+                            </h2>
+                        </div>
+                    </form>
+                </div>
+            </aside>
+        </div>
+
+        <!-- dialog (create customer) -->
+        <div class="shadow-2xl rounded-2xl p-7 w-100 bg-white" data-dialog="create">
+            <form class="w-full" data-form="create">
+                <strong class="text-xl uppercase text-center block mb-6">Add new Customer</strong>
+
+                <!-- name -->
+                <div class="mt-3">
+                    <label for="full_name" class="block mb-1">Full name</label>
+                    <input
+                        id="full_name"
+                        type="text"
+                        class="border-1 border-gray-100 w-full py-2 px-3 transition-colors focus:border-green-600 focus:outline-none"
+                        placeholder="Ahmed Hashem"
+                        value="Ahmed Hashem"
+                    />
+                </div>
+
+                <!-- (age|gender) -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="mt-3">
+                        <label for="age" class="block mb-1">Age</label>
+                        <input
+                            id="age"
+                            type="number"
+                            class="border-1 border-gray-100 w-full py-2 px-3 transition-colors focus:border-green-600 focus:outline-none"
+                            placeholder="26"
+                            value="26"
+                        />
+                    </div>
+                    <div class="mt-3">
+                        <label for="gender" class="block mb-1">Gender</label>
+                        <select
+                            id="gender"
+                            class="border-1 border-gray-100 w-full py-2 px-3 transition-colors focus:border-green-600 focus:outline-none"
+                        >
+                            <!-- <option value="" class="text-gray-400">__select__</option> -->
+                            <option value="male" selected>Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- phone -->
+                <div class="mt-3">
+                    <label for="phone" class="block mb-1">Phone</label>
+                    <input
+                        id="phone"
+                        type="tel"
+                        class="border-1 border-gray-100 w-full py-2 px-3 transition-colors focus:border-green-600 focus:outline-none"
+                        placeholder="01012345678"
+                        value="+201063831844"
+                    />
+                </div>
+
+                <!-- (weight|height) -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="mt-3">
+                        <label for="weight" class="block mb-1">Weight (kg)</label>
+                        <input
+                            id="weight"
+                            type="number"
+                            class="border-1 border-gray-100 w-full py-2 px-3 transition-colors focus:border-green-600 focus:outline-none"
+                            placeholder="82.5"
+                            value="83"
+                        />
+                    </div>
+                    <div class="mt-3">
+                        <label for="height" class="block mb-1">Height (cm)</label>
+                        <input
+                            id="height"
+                            type="number"
+                            class="border-1 border-gray-100 w-full py-2 px-3 transition-colors focus:border-green-600 focus:outline-none"
+                            placeholder="179"
+                            value="179"
+                        />
+                    </div>
+                </div>
+
+                <!-- notes -->
+                <div class="mt-3">
+                    <label for="notes" class="block mb-1">Notes</label>
+                    <textarea
+                        id="notes"
+                        class="border-1 border-gray-100 w-full py-2 px-3 transition-colors focus:border-green-600 focus:outline-none"
+                        placeholder="Some notes.."
+                    ></textarea>
+                </div>
+
+                <div class="mt-3">
+                    <button
+                        class="border-1 border-green-600 bg-green-600 text-white font-semibold cursor-pointer w-full py-2 px-3 transition-colors hover:bg-green-700"
+                    >
+                        Create
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- dialog (edit customer) -->
+        <div class="shadow-2xl rounded-2xl p-7 w-200 max-w-screen bg-white" data-dialog="edit">
+            <div class="grid grid-cols-2 gap-4">
+                <!-- list -->
+                <ul class="" data-customer-modal-info>
+                    <!-- (loop) -->
+                    <!-- <li class="flex items-center gap-2 border-b-1 border-gray-100">
+                        <span class="w-30 bg-gray-100 p-2 text-center font-semibold">Full Name</span>
+                        <span>Ahmed Hashem</span>
+                    </li> -->
+                </ul>
+
+                <!-- actions **(no plan yet)** -->
+                <form class="flex flex-col gap-3" data-plans></form>
+            </div>
+        </div>
+
+        <!-- close (all) dialogs toggler -->
+        <button
+            data-dialog-toggle="all"
+            class="w-10 h-10 rounded-full cursor-pointer bg-gray-50 flex items-center justify-center transition-colors hover:bg-gray-300"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                class="bi bi-x-lg"
+                viewBox="0 0 16 16"
+            >
+                <path
+                    d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"
+                />
+            </svg>
+        </button>
+
+        <script src="https://cdn.jsdelivr.net/npm/@date-fns/cdn@4.4.0/cdn.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/idb@8/build/umd.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>

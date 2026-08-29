@@ -1,0 +1,29 @@
+{
+    "success": true,
+    "data": [
+        {
+            "id": "single_1_50",
+            "type": "single",
+            "name": "Single Session",
+            "price": 50,
+            "no_of_sessions": 1,
+            "expires_after_days": 1
+        },
+        {
+            "id": "monthly_12_500",
+            "type": "monthly_12",
+            "name": "Monthly (12)",
+            "price": 500,
+            "no_of_sessions": 12,
+            "expires_after_days": 30
+        },
+        {
+            "id": "monthly_16_600",
+            "type": "monthly_16",
+            "name": "Monthly (16)",
+            "price": 600,
+            "no_of_sessions": 16,
+            "expires_after_days": 30
+        }
+    ]
+}
