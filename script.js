@@ -45,14 +45,14 @@ fetchCustomers();
 handleEvents();
 
 class Person {
-    constructor({ full_name, phone, gender, age, notes }) {
+    constructor({ full_name, phone, gender, age, notes, created_at, id }) {
         this.full_name = full_name;
         this.gender = gender;
-        this.phone = phone || null;
-        this.age = age || null;
-        this.notes = notes || null;
-        this.created_at = new Date(Date.now()).toString();
-        this.id = this.generateId();
+        this.phone = phone ?? null;
+        this.age = age ?? null;
+        this.notes = notes ?? null;
+        this.created_at = created_at || new Date(Date.now()).toString();
+        this.id = id || this.generateId();
     }
 
     generateId() {
@@ -61,28 +61,66 @@ class Person {
 }
 
 class Customer extends Person {
-    constructor({ full_name, phone, gender, age, notes, weight, height }) {
-        super({ full_name, phone, gender, age, notes });
+    constructor({ full_name, phone, gender, age, notes, created_at, id, weight, height, active_plan, joined_plans }) {
+        super({ full_name, phone, gender, age, notes, created_at, id });
         this.weight = weight;
         this.height = height;
+        this.active_plan = active_plan || {};
+        this.joined_plans = joined_plans || {};
+
+        // this.refreshActivePlan();
     }
 
-    async joinPlan(id = '') {
+    async joinPlan(planId = '') {
         const db = await idb.openDB(constVars.STORE_NAME);
-        const planData = db.get(constVars.PLANS_NAME, id);
+        const planData = await db.get(constVars.PLANS_NAME, planId);
         if (planData) {
-            this.joined_plan = {
-                id,
+            const currentDate = new Date(Date.now()).toString();
+            const expireDate = dateFns.addDays(currentDate, planData.expires_after_days);
+            this.active_plan = {
+                id: planId,
                 attended_sessions: 0,
-                joined_date: new Date(Date.now()).toString(),
+                joined_date: currentDate,
+                expire_date: new Date(expireDate).toString(),
                 expired: false,
                 completed: false,
             };
+
+            if (this.joined_plans[planId]) {
+                this.joined_plans[planId].count += 1;
+            } else {
+                this.joined_plans[planId] = { count: 1 };
+            }
+
+            await this.refreshActivePlan();
 
             // update db
             db.put(constVars.CUSTOMERS_NAME, this);
         } else {
             console.error("plan doesn't exist?!");
+        }
+    }
+
+    async refreshActivePlan() {
+        const db = await idb.openDB(constVars.STORE_NAME);
+        if (this.active_plan) {
+            // if Not expired check dates
+            if (!this.active_plan.expired) {
+                const currentDate = new Date(Date.now()).toString();
+                const expireDate = this.active_plan.expire_date;
+                const isExpired = dateFns.isAfter(currentDate, expireDate);
+                if (isExpired) {
+                    this.active_plan.expired = true;
+                }
+            }
+
+            // if Not completed check attendance
+            if (!this.active_plan.completed) {
+                const planData = await db.get(constVars.PLANS_NAME, this.active_plan.id);
+                if (this.active_plan.attended_sessions >= planData.no_of_sessions) {
+                    this.active_plan.completed = true;
+                }
+            }
         }
     }
 }
@@ -147,6 +185,33 @@ function handleEvents() {
             }
         }
     });
+
+    const subscribePlanForm = document.querySelector('[data-plans]');
+    subscribePlanForm.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const plans = subscribePlanForm.elements['customer_plan'];
+        const chosenPlan = Array.from(plans).find(item => item.checked);
+        const dialogEl = subscribePlanForm.closest('[data-customer-id]');
+        const customerId = dialogEl.getAttribute('data-customer-id');
+        joinPlan({ planId: chosenPlan.id, customerId });
+    });
+}
+
+async function joinPlan({ planId, customerId }) {
+    const db = await idb.openDB(constVars.STORE_NAME);
+    const customerObj = await db.get(constVars.CUSTOMERS_NAME, customerId);
+    const updatedCustomer = new Customer(customerObj);
+
+    try {
+        await updatedCustomer.joinPlan(planId);
+        // await db.put(constVars.CUSTOMERS_NAME, updatedCustomer);
+        toggleDialog('all');
+        alert('plan joined!');
+    } catch (err) {
+        console.log(err);
+    } finally {
+    }
 }
 
 async function deleteCustomer(id = '') {
@@ -191,10 +256,11 @@ async function toggleDialog(name = '', customerId = '') {
             document.body.classList.toggle('dialog-is-active');
 
             if (name === 'edit') {
+                targetDialog.setAttribute('data-customer-id', customerId);
                 const listEl = targetDialog.querySelector('[data-customer-modal-info]');
                 listEl.innerHTML = '';
 
-                const plansContainer = targetDialog.querySelector('[data-plans]');
+                const plansContainer = targetDialog.querySelector('[data-plans-container]');
                 plansContainer.innerHTML = '';
 
                 const db = await idb.openDB(constVars.STORE_NAME);
@@ -210,23 +276,26 @@ async function toggleDialog(name = '', customerId = '') {
 
                     const itemHtml = `
                         <li class="flex items-center gap-2 border-b-1 border-gray-100">
-                            <span class="w-30 bg-gray-100 p-2 text-center font-semibold uppercase">${key.replaceAll('_', ' ')}</span>
+                            <span class="w-30 bg-gray-100 p-2 text-center font-semibold uppercase">${key.replaceAll(
+                                '_',
+                                ' '
+                            )}</span>
                             <span>${value || '----'}</span>
                         </li>
                     `;
                     listEl.insertAdjacentHTML('beforeend', itemHtml);
                 });
 
-                plans.sort((a, b) => {
-                    return a.no_of_sessions - b.no_of_sessions;
-                });
+                plans.sort((a, b) => a.no_of_sessions - b.no_of_sessions);
                 plans.forEach(({ id, name, price, no_of_sessions }, index) => {
                     const planHtml = `
                         <div>
-                            <input id="${id}" type="radio" name="customer_plan" ${index === 0 ? 'checked' : ''} data-plan-checker hidden />
+                            <input id="${id}" type="radio" name="customer_plan" ${
+                        index === 0 ? 'checked' : ''
+                    } data-plan-checker hidden />
                             <label
                                 for="${id}"
-                                class="border-1 cursor-pointer border-gray-100 rounded-2xl w-full p-3 flex items-center justify-between"
+                                class="border-1 cursor-pointer border-gray-600 bg-gray-100 rounded-2xl w-full p-3 flex items-center justify-between"
                             >
                                 <div class="">
                                     <strong class="text-2xl font-semibold">${name}</strong>

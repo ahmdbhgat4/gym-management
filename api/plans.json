@@ -12,7 +12,7 @@
         {
             "id": "monthly_12_500",
             "type": "monthly_12",
-            "name": "Monthly (12)",
+            "name": "Monthly (Regular)",
             "price": 500,
             "no_of_sessions": 12,
             "expires_after_days": 30
@@ -20,7 +20,7 @@
         {
             "id": "monthly_16_600",
             "type": "monthly_16",
-            "name": "Monthly (16)",
+            "name": "Monthly (Special)",
             "price": 600,
             "no_of_sessions": 16,
             "expires_after_days": 30
